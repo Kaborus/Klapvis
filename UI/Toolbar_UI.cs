@@ -17,6 +17,8 @@ public class Toolbar_UI : MonoBehaviour
         CheckAlphaNumericKeys();
     }
 
+    public Slot_UI GetSelectedSlot() => selectedSlot;
+
     public void SelectSlot(int index)
     {
         if (toolbarSlots.Count == 9)

@@ -14,17 +14,19 @@ public class Minen : MonoBehaviour
     void Start()
     {
         items = transform.Find("Items");
+        movement = FindObjectOfType<Movement>();
+        equipment = FindObjectOfType<Equipment>();
     }
 
     public void OnMouseOver()
     {
         if (Input.GetKey(KeyCode.Mouse0))
         {
-            if (obj.tag == "Tree" && equipment.axe == true)
+            if (obj.tag == "Tree" && equipment.tool == Tool.Axe)
             {
                 Hak();
             }
-            if (obj.tag == "Stone" && equipment.pickaxe == true)
+            if (obj.tag == "Stone" && equipment.tool == Tool.Pickaxe)
             {
                 Hak();
             }
@@ -34,7 +36,7 @@ public class Minen : MonoBehaviour
     public void Hak()
     {
         hp -= Time.deltaTime;
-        Debug.Log(hp);
+        //Debug.Log(hp);
     }
 
     public void HaalWegEnGeefItem()
@@ -54,14 +56,9 @@ public class Minen : MonoBehaviour
 
     void Update()
     {
-        // spawn = FindObjectOfType<Spawn>();
-        // if(spawn.playerAvailable) {
-        //     movement = FindObjectOfType<Movement>();
-        //     equipment = FindObjectOfType<Equipment>();
-        // }
-
-        // if(hp <= 0) {
-        //     HaalWegEnGeefItem();
-        // }
+        if (hp <= 0)
+        {
+            HaalWegEnGeefItem();
+        }
     }
 }

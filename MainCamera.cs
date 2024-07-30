@@ -5,7 +5,6 @@ using UnityEngine;
 public class MainCamera : MonoBehaviour
 {
     public MenuManager menuManager;
-    public Movement movement;
     public GameObject human;
     public GameObject goblin;
     public GameObject dwarf;
@@ -19,24 +18,23 @@ public class MainCamera : MonoBehaviour
         giant = GameObject.Find("Giant(Clone)");
 
         menuManager = FindObjectOfType<MenuManager>();
-        movement = FindObjectOfType<Movement>();
     }
 
     void Update()
     {
-        if (menuManager.isHuman && human != null)
+        if (menuManager.character == Character.Human && human != null)
         {
             transform.position = human.transform.position + new Vector3(0, 0, -10);
         }
-        if (menuManager.isGoblin && goblin != null)
+        if (menuManager.character == Character.Goblin && goblin != null)
         {
             transform.position = goblin.transform.position + new Vector3(0, 0, -10);
         }
-        if (menuManager.isDwarf && dwarf != null)
+        if (menuManager.character == Character.Dwarf && dwarf != null)
         {
             transform.position = dwarf.transform.position + new Vector3(0, 0, -10);
         }
-        if (menuManager.isGiant && giant != null)
+        if (menuManager.character == Character.Giant && giant != null)
         {
             transform.position = giant.transform.position + new Vector3(0, 0, -10);
         }

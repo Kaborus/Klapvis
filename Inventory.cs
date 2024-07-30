@@ -9,12 +9,14 @@ public class Inventory
     //slot class
 
     public List<Slot> slots = new List<Slot>();
+    public Equipable equipable;
 
-    public Inventory(int numSlots)
+    public Inventory(int numSlots, Equipable equipable = Equipable.Everything)
     {
         for (int i = 0; i < numSlots; i++)
         {
             Slot slot = new Slot();
+            slot.equipable = equipable;
             slots.Add(slot);
         }
     }
@@ -40,7 +42,18 @@ public class Inventory
         }
     }
 
-    public void Remove(string name) {
+    public void SwitchItemsInSlot(Slot fromSlot, Slot toSlot)
+    {
+        Slot slot = new Slot();
+
+        slot.CopySlot(fromSlot);
+
+        fromSlot.CopySlot(toSlot);
+        toSlot.CopySlot(slot);
+    }
+
+    public void Remove(string name)
+    {
         Slot slot = slots.FirstOrDefault(item => item.itemName == name);
         slot.count--;
     }
@@ -66,21 +79,42 @@ public class Inventory
         Slot fromSlot = slots[fromIndex];
         Slot toSlot = toInventory.slots[toIndex];
 
-        if (toSlot.IsEmpty || toSlot.canAddItem(fromSlot.itemName))
+        if (fromSlot.IsEmpty)
+        {
+            return;
+        }
+
+        if (!CanEquipItemInInventory(fromSlot, toSlot))
+        {
+            return;
+        }
+
+        if (!toSlot.IsEmpty)
+        {
+            SwitchItemsInSlot(fromSlot, toSlot);
+            return;
+        }
+        else if (toSlot.IsEmpty || toSlot.canAddItem(fromSlot.itemName))
         {
             for (int i = 0; i < numToMove; i++)
             {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.max);
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.max, fromSlot.itemType);
                 fromSlot.RemoveItem();
             }
         }
+
+
     }
 
-    public void Update()
+    public bool CanEquipItemInInventory(Slot fromSlot, Slot toSlot)
     {
-        foreach (var slot in slots)
+        if (toSlot.equipable == Equipable.Armor)
         {
-            Debug.Log(slot);
+            if (toSlot.equipable.ToString() != fromSlot.itemType.ToString())
+            {
+                return false;
+            }
         }
+        return true;
     }
 }

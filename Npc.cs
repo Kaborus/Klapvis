@@ -5,7 +5,7 @@ using UnityEngine;
 
 public class Npc : MonoBehaviour
 {
-    public DialogueTrigger trigger;
+    //public DialogueTrigger trigger;
     bool gebied;
     public Quest? quest;
     public QuestManager? questManager;
@@ -18,7 +18,7 @@ public class Npc : MonoBehaviour
                 Debug.Log(quest.data.Name);
                 //questManager.StartQuest(quest);
             }
-            trigger.StartDialogue();
+            //trigger.StartDialogue();
         }
     }
 

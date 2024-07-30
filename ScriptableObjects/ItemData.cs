@@ -13,9 +13,14 @@ public class ItemData : ScriptableObject
 [System.Serializable]
 public enum Category
     {
+        None,
         Material,
-        Tool,
-        Weapon,
+        Melee,
+        Range,
+        Pickaxe,
+        Axe,
         Armor,
         Consumable,
+        Arrow,
     }
+    

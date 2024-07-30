@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -10,6 +9,8 @@ public class GameManager : MonoBehaviour
     public static GameManager instance;
     public ItemManager itemManager;
     public UI_Manager uiManager;
+    public HUDManager hudManager;
+    public EquipmentManager equipmentManager;
     public GameOverScreen gameover;
     public Movement movement;
     public MenuManager menuManager;
@@ -18,7 +19,6 @@ public class GameManager : MonoBehaviour
     public GameObject dwarf;
     public GameObject giant;
     public Player player;
-    public Slider slider;
 
     private void Awake()
     {
@@ -33,20 +33,26 @@ public class GameManager : MonoBehaviour
 
         itemManager = GetComponent<ItemManager>();
         uiManager = GetComponent<UI_Manager>();
+        hudManager = GetComponent<HUDManager>();
         gameover = FindObjectOfType<GameOverScreen>();
         menuManager = FindObjectOfType<MenuManager>();
+        equipmentManager = GetComponent<EquipmentManager>();
         NewPlayer();
     }
 
     private void Start()
     {
         player = FindObjectOfType<Player>();
-        slider = GameObject.Find("Hitpoints").GetComponent<Slider>();
     }
 
     private void Update()
     {
-        if (slider.value == 0)
+        if (player == null)
+        {
+            return;
+        }
+
+        if (hudManager.healthSlider.value == 0)
         {
             RemovePlayer();
         }
@@ -54,45 +60,27 @@ public class GameManager : MonoBehaviour
 
     public void NewPlayer()
     {
-        if (menuManager.isHuman)
+        switch (menuManager.character)
         {
-            Instantiate(human);
-        }
-        if (menuManager.isGoblin)
-        {
-            Instantiate(goblin);
-        }
-        if (menuManager.isDwarf)
-        {
-            Instantiate(dwarf);
-        }
-        if (menuManager.isGiant)
-        {
-            Instantiate(giant);
+            case Character.Human:
+                Instantiate(human);
+                break;
+            case Character.Goblin:
+                Instantiate(goblin);
+                break;
+            case Character.Dwarf:
+                Instantiate(dwarf);
+                break;
+            case Character.Giant:
+                Instantiate(giant);
+                break;
         }
     }
 
     public void RemovePlayer()
     {
-        if (menuManager.isHuman && human != null)
-        {
-            human = GameObject.Find("Human(Clone)");
-            Destroy(human);
-        }
-        if (menuManager.isGoblin && goblin != null)
-        {
-            goblin = GameObject.Find("Goblin(Clone)");
-            Destroy(goblin);
-        }
-        if (menuManager.isDwarf && dwarf != null)
-        {
-            dwarf = GameObject.Find("Dwarf(Clone)");
-            Destroy(dwarf);
-        }
-        if (menuManager.isGiant && giant != null)
-        {
-            giant = GameObject.Find("Giant(Clone)");
-            Destroy(giant);
-        }
+        Destroy(player.gameObject);
     }
 }
+
+public enum Character { None, Human, Goblin, Dwarf, Giant }

@@ -5,5 +5,5 @@ using UnityEngine.UI;
 
 public class Equipment_UI : MonoBehaviour
 {
-    
+    [SerializeField] private List<Slot_UI> equipmentSlots = new List<Slot_UI>();
 }

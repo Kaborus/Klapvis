@@ -43,6 +43,10 @@ public class CraftingManager : MonoBehaviour
             Slot slot = player.inventory.backpack.slots.FirstOrDefault(slot => slot.itemName == i.data.name);
             slot.RemoveItem();
         }
-        player.inventory.Add("Backpack", item);
+        for (int i = 0; i < recipe.amount; i++)
+        {
+            player.inventory.Add("Backpack", item);
+        }
+
     }
 }

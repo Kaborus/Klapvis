@@ -1,9 +1,22 @@
+using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public event Action OnHealthChange;
+    public float maxHealth;
+    public float health;
+    public float regenerationTime = 0;
+
+    public float maxStrength;
+    public float strength;
+
+    public float maxFood;
+    public float food;
+
     public Equipment equipment;
     public GameObject arrowPrefab;
     public float arrowSpeed = 10f;
@@ -12,6 +25,8 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         inventory = GetComponent<InventoryManager>();
+        health = maxHealth;
+        food = maxFood;
     }
 
     void Start()
@@ -26,19 +41,56 @@ public class Player : MonoBehaviour
             Vector3Int position = new Vector3Int((int)transform.position.x, (int)transform.position.y, 0);
         }
 
-        if (equipment.range)
+        if (equipment.tool == Tool.Range && Input.GetMouseButtonDown(0))
         {
-            if (Input.GetMouseButtonDown(0))
+            if (!inventory.backpack.slots.Any(item => item.itemType == Category.Arrow))
             {
-                ShootArrow();
+                return;
             }
+
+            ShootArrow();
+            inventory.backpack.slots.FirstOrDefault(item => item.itemType == Category.Arrow).RemoveItem();
         }
+
+
+        Regenerate();
+    }
+
+    public void Regenerate()
+    {
+        if (health < maxHealth)
+        {
+            regenerationTime += Time.deltaTime;
+        }
+
+        if (regenerationTime >= 1)
+        {
+            health++;
+            DrainFood();
+            OnHealthChange?.Invoke();
+            regenerationTime = 0;
+        }
+    }
+
+    public void DrainFood()
+    {
+        food--;
+    }
+
+    public void TakeDamage(Mob mob)
+    {
+        health -= mob.damage;
+    }
+
+    public void HandleAnimalDeath(Mob mob)
+    {
+        strength += mob.strengthValue;
     }
 
     public void DropItem(Item item)
     {
         Vector2 spawnLocation = transform.position;
-        Vector2 spawnOffset = Random.insideUnitCircle * 1.25f;
+        Vector2 spawnOffset = UnityEngine.Random.insideUnitCircle * 1.25f;
         Item droppedItem = Instantiate(item, spawnLocation + spawnOffset, Quaternion.identity);
         droppedItem.rb2d.AddForce(spawnOffset * 2f, ForceMode2D.Impulse);
     }

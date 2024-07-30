@@ -1,7 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
 
-
 public class Fireball : MonoBehaviour
 {
     public Slider slider;

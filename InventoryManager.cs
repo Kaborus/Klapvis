@@ -20,7 +20,7 @@ public class InventoryManager : MonoBehaviour
     {
         backpack = new Inventory(backpackSlotCount);
         toolbar = new Inventory(toolbarSlotCount);
-        equipment = new Inventory(equipmentSlotCount);
+        equipment = new Inventory(equipmentSlotCount, Equipable.Armor);
 
         inventoryByName.Add("Backpack", backpack);
         inventoryByName.Add("Toolbar", toolbar);
