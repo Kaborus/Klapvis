@@ -3,40 +3,47 @@ using UnityEngine;
 
 public class QuestManager : MonoBehaviour
 {
-    private static QuestManager _instance;
-    public static QuestManager Instance => _instance;
-
-    private List<Quest> activeQuests = new List<Quest>();
-
-    public List<Quest> allQuests = new List<Quest>();
+    public Quest[] quests;
+    private Dictionary<string, Quest> nameToQuestDict = new Dictionary<string, Quest>();
 
     private void Awake()
     {
-        if (_instance == null)
-            _instance = this;
-        else
-            Destroy(gameObject);
-    }
-
-    public void Start() {
-        foreach (var item in allQuests)
+        foreach (Quest quest in quests)
         {
-            Debug.Log(item.data.Description);
+            AddQuest(quest);
         }
     }
 
-    // Voeg een nieuwe quest toe aan de actieve quests
-    public void AddQuest(Quest quest)
+    private void AddQuest(Quest quest)
     {
-        activeQuests.Add(quest);
-        Debug.Log($"Quest '{quest.data.Name}' toegevoegd.");
+        if (!nameToQuestDict.ContainsKey(quest.data.questName))
+        {
+            nameToQuestDict.Add(quest.data.questName, quest);
+        }
     }
 
-    // Markeer een quest als voltooid
+    public Quest GetQuestByName(string key)
+    {
+        if (nameToQuestDict.ContainsKey(key))
+        {
+            return nameToQuestDict[key];
+        }
+        return null;
+    }
+
+    public void StartQuest(Quest quest)
+    {
+        if (nameToQuestDict.ContainsKey(quest.data.questName))
+        {
+            nameToQuestDict[quest.data.questName].questStatus = QuestStatus.Completed;
+        }
+    }
+
     public void CompleteQuest(Quest quest)
     {
-        quest.finished = true;
-        Debug.Log($"Quest '{quest.data.Name}' voltooid!");
-        // Voeg hier beloningen, voortgangsupdates, enzovoort toe.
+        if (nameToQuestDict.ContainsKey(quest.data.questName))
+        {
+            nameToQuestDict[quest.data.questName].questStatus = QuestStatus.Completed;
+        }
     }
 }

@@ -7,20 +7,7 @@ public class ItemData : ScriptableObject
 {
     public string itemName;
     public Sprite icon;
-    public Category category;
+    public int max = 100;
+    public ItemCategory itemCategory;
 }
-
-[System.Serializable]
-public enum Category
-    {
-        None,
-        Material,
-        Melee,
-        Range,
-        Pickaxe,
-        Axe,
-        Armor,
-        Consumable,
-        Arrow,
-    }
     

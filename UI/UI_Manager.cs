@@ -12,20 +12,16 @@ public class UI_Manager : MonoBehaviour
     public static Slot_UI draggedSlot;
     public static Image draggedIcon;
     public static bool dragSingle;
-    public Movement movement;
+    private bool hasUIOpen = false;
 
     private void Awake()
     {
         Initialize();
     }
 
-    private void Start() {
-        movement = FindObjectOfType<Movement>();
-    }
-
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab) || Input.GetKeyDown(KeyCode.B))
+        if (Input.GetKeyDown(KeyCode.Tab))
         {
             ToggleInventoryUI();
         }
@@ -51,14 +47,22 @@ public class UI_Manager : MonoBehaviour
         {
             if (!inventoryPanel.activeSelf)
             {
+                if (hasUIOpen)
+                {
+                    return;
+                }
                 inventoryPanel.SetActive(true);
-                movement.EnableMovement(true);
+                hasUIOpen = true;
+                GameManager.instance.player.playerMovement.EnableMovement(false);
+                GameManager.instance.player.playerController.EnableUseEquippedItem(false);
                 RefreshInventoryUI("Backpack");
             }
             else
             {
                 inventoryPanel.SetActive(false);
-                movement.EnableMovement(false); 
+                hasUIOpen = false;
+                GameManager.instance.player.playerMovement.EnableMovement(true);
+                GameManager.instance.player.playerController.EnableUseEquippedItem(true);
             }
         }
     }
@@ -69,13 +73,21 @@ public class UI_Manager : MonoBehaviour
         {
             if (!craftPanel.activeSelf)
             {
+                if (hasUIOpen)
+                {
+                    return;
+                }
                 craftPanel.SetActive(true);
-                movement.EnableMovement(true);
+                hasUIOpen = true;
+                GameManager.instance.player.playerMovement.EnableMovement(false);
+                GameManager.instance.player.playerController.EnableUseEquippedItem(false);
             }
             else
             {
                 craftPanel.SetActive(false);
-                movement.EnableMovement(false); 
+                hasUIOpen = false;
+                GameManager.instance.player.playerMovement.EnableMovement(true);
+                GameManager.instance.player.playerController.EnableUseEquippedItem(true);
             }
         }
     }

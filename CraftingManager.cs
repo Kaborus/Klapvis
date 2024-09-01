@@ -5,48 +5,57 @@ using System.Linq;
 
 public class CraftingManager : MonoBehaviour
 {
+    bool hasAllItems = false;
+    public Player player;
+    Item item;
 
-    public void CraftItem(CraftRecipe recipe)
+    private void Start()
     {
-        bool hasAllItems = false;
-        int count = recipe.ingredients.Count;
+        player = FindObjectOfType<Player>();
+    }
 
-        Player player = FindObjectOfType<Player>();
+    public void CraftItem(CraftingRecipe recipe)
+    {
+        item = recipe.result;
 
-        if (!player)
+        if (!HasAllRequiredItems(recipe))
         {
             return;
         }
 
+        RemoveRequiredItems(recipe);
 
-        Item item = recipe.result;
+        AddItemToInventory(recipe);
+    }
 
-        if (item == null)
-        {
-            return;
-        }
-
+    private bool HasAllRequiredItems(CraftingRecipe recipe)
+    {
         foreach (Item i in recipe.ingredients)
         {
-            var test = player.inventory.backpack.slots.Where(i => i.count == 0);
-
-            hasAllItems = player.inventory.backpack.slots.Any(item => item.itemName == i.name);
+            hasAllItems = player.playerInventory.backpack.slots.Any(item => item.itemName == i.name);
 
             if (!hasAllItems)
             {
-                return;
+                return false;
             }
         }
+        return true;
+    }
 
+    private void RemoveRequiredItems(CraftingRecipe recipe)
+    {
         foreach (Item i in recipe.ingredients)
         {
-            Slot slot = player.inventory.backpack.slots.FirstOrDefault(slot => slot.itemName == i.data.name);
+            Slot slot = player.playerInventory.backpack.slots.FirstOrDefault(slot => slot.itemName == i.data.name);
             slot.RemoveItem();
         }
+    }
+
+    private void AddItemToInventory(CraftingRecipe recipe)
+    {
         for (int i = 0; i < recipe.amount; i++)
         {
-            player.inventory.Add("Backpack", item);
+            player.playerInventory.Add("Backpack", item);
         }
-
     }
 }

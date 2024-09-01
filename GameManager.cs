@@ -8,12 +8,10 @@ public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
     public ItemManager itemManager;
+    public QuestManager questManager;
     public UI_Manager uiManager;
-    public HUDManager hudManager;
-    public EquipmentManager equipmentManager;
     public GameOverScreen gameover;
-    public Movement movement;
-    public MenuManager menuManager;
+    public CharacterSelection characterSelection;
     public GameObject human;
     public GameObject goblin;
     public GameObject dwarf;
@@ -32,12 +30,14 @@ public class GameManager : MonoBehaviour
         }
 
         itemManager = GetComponent<ItemManager>();
+        questManager = GetComponent<QuestManager>();
         uiManager = GetComponent<UI_Manager>();
-        hudManager = GetComponent<HUDManager>();
         gameover = FindObjectOfType<GameOverScreen>();
-        menuManager = FindObjectOfType<MenuManager>();
-        equipmentManager = GetComponent<EquipmentManager>();
+        characterSelection = FindObjectOfType<CharacterSelection>();
+
         NewPlayer();
+
+        Destroy(GameObject.Find("CharacterSelection"));
     }
 
     private void Start()
@@ -45,22 +45,9 @@ public class GameManager : MonoBehaviour
         player = FindObjectOfType<Player>();
     }
 
-    private void Update()
-    {
-        if (player == null)
-        {
-            return;
-        }
-
-        if (hudManager.healthSlider.value == 0)
-        {
-            RemovePlayer();
-        }
-    }
-
     public void NewPlayer()
     {
-        switch (menuManager.character)
+        switch (characterSelection.character)
         {
             case Character.Human:
                 Instantiate(human);
@@ -77,10 +64,8 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    public void RemovePlayer()
-    {
-        Destroy(player.gameObject);
-    }
+    // public void RemovePlayer()
+    // {
+    //     Destroy(player.gameObject);
+    // }
 }
-
-public enum Character { None, Human, Goblin, Dwarf, Giant }

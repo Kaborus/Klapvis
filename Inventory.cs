@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,17 +7,17 @@ using System.Linq;
 [System.Serializable]
 public class Inventory
 {
-    //slot class
-
+    public string Name;
     public List<Slot> slots = new List<Slot>();
-    public Equipable equipable;
 
-    public Inventory(int numSlots, Equipable equipable = Equipable.Everything)
+    public Inventory(string name, int numSlots)
     {
+        this.Name = name;
         for (int i = 0; i < numSlots; i++)
         {
             Slot slot = new Slot();
-            slot.equipable = equipable;
+            slot.slotType = SlotType.Normal;
+
             slots.Add(slot);
         }
     }
@@ -25,7 +26,7 @@ public class Inventory
     {
         foreach (Slot slot in slots)
         {
-            if (slot.itemName == item.data.itemName && slot.canAddItem(item.data.itemName))
+            if ((slot.itemName == item.data.itemName && slot.canAddItem(item.data.itemName)) && item.data.max > slot.count)
             {
                 slot.AddItem(item);
                 return;
@@ -74,12 +75,23 @@ public class Inventory
         }
     }
 
-    public void MoveSlot(int fromIndex, int toIndex, Inventory toInventory, int numToMove = 1)
+    public void MoveSlot(int fromIndex, int toIndex, Inventory fromInventory, Inventory toInventory, int numToMove = 1)
     {
         Slot fromSlot = slots[fromIndex];
-        Slot toSlot = toInventory.slots[toIndex];
 
         if (fromSlot.IsEmpty)
+        {
+            return;
+        }
+
+        Slot toSlot = toInventory.slots[toIndex];
+
+        if (!CheckIfItemSlotHasMaxItems(fromSlot, toSlot))
+        {
+            return;
+        }
+
+        if (!FromLoadoutConditions(fromSlot, toSlot, fromInventory, toInventory))
         {
             return;
         }
@@ -89,32 +101,80 @@ public class Inventory
             return;
         }
 
-        if (!toSlot.IsEmpty)
-        {
-            SwitchItemsInSlot(fromSlot, toSlot);
-            return;
-        }
-        else if (toSlot.IsEmpty || toSlot.canAddItem(fromSlot.itemName))
-        {
-            for (int i = 0; i < numToMove; i++)
-            {
-                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.max, fromSlot.itemType);
-                fromSlot.RemoveItem();
-            }
-        }
+        LoadoutChange(fromSlot, fromInventory, toInventory);
 
-
+        MoveItems(fromSlot, toSlot, numToMove);
     }
 
-    public bool CanEquipItemInInventory(Slot fromSlot, Slot toSlot)
+    private void LoadoutChange(Slot fromSlot, Inventory fromInventory, Inventory toInventory)
     {
-        if (toSlot.equipable == Equipable.Armor)
+        if (fromInventory.Name == "Loadout")
         {
-            if (toSlot.equipable.ToString() != fromSlot.itemType.ToString())
+            Item item = GameManager.instance.itemManager.GetItemByName(fromSlot.itemName);
+            GearData gearData = (GearData)item.data;
+            GameManager.instance.player.playerStats.UpdateProtection(-(gearData.protection));
+        }
+
+        if (toInventory.Name == "Loadout")
+        {
+            Item item = GameManager.instance.itemManager.GetItemByName(fromSlot.itemName);
+            GearData gearData = (GearData)item.data;
+            GameManager.instance.player.playerStats.UpdateProtection(gearData.protection);
+        }
+    }
+
+    private bool CheckIfItemSlotHasMaxItems(Slot fromSlot, Slot toSlot)
+    {
+        if (fromSlot.itemName == toSlot.itemName)
+        {
+            Item item = GameManager.instance.itemManager.GetItemByName(fromSlot.itemName);
+
+            if (item.data.max <= fromSlot.count || item.data.max <= toSlot.count || ((fromSlot.count + toSlot.count) > item.data.max))
             {
                 return false;
             }
         }
         return true;
+    }
+
+    private bool FromLoadoutConditions(Slot fromSlot, Slot toSlot, Inventory fromInventory, Inventory toInventory)
+    {
+        if (fromInventory.Name == "Loadout" && toInventory.Name != "Loadout")
+        {
+            if ((fromSlot.itemCategory != toSlot.itemCategory) && !toSlot.IsEmpty)
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void MoveItems(Slot fromSlot, Slot toSlot, int numToMove)
+    {
+        if (toSlot.IsEmpty || toSlot.canAddItem(fromSlot.itemName))
+        {
+            for (int i = 0; i < numToMove; i++)
+            {
+                toSlot.AddItem(fromSlot.itemName, fromSlot.icon, fromSlot.max, fromSlot.itemCategory);
+                fromSlot.RemoveItem();
+            }
+        }
+        else
+        {
+            SwitchItemsInSlot(fromSlot, toSlot);
+        }
+    }
+
+    private bool CanEquipItemInInventory(Slot fromSlot, Slot toSlot)
+    {
+        if (toSlot.slotType == SlotType.Normal)
+        {
+            return true;
+        }
+        else if (toSlot.slotType.ToString() == fromSlot.itemCategory.ToString())
+        {
+            return true;
+        }
+        return false;
     }
 }

@@ -5,8 +5,6 @@ using UnityEngine.UI;
 
 public class Inventory_UI : MonoBehaviour
 {
-    public Movement movement;
-    public Collectable collectable;
     public string inventoryName;
     public List<Slot_UI> slots = new List<Slot_UI>();
     [SerializeField] private Canvas canvas;
@@ -20,9 +18,7 @@ public class Inventory_UI : MonoBehaviour
 
     private void Start()
     {
-        collectable = FindObjectOfType<Collectable>();
-        movement = FindObjectOfType<Movement>();
-        inventory = GameManager.instance.player.inventory.GetInventoryByName(inventoryName);
+        inventory = GameManager.instance.player.playerInventory.GetInventoryByName(inventoryName);
         SetupSlots();
         Refresh();
     }
@@ -55,12 +51,12 @@ public class Inventory_UI : MonoBehaviour
             {
                 if (UI_Manager.dragSingle)
                 {
-                    GameManager.instance.player.DropItem(itemToDrop);
+                    GameManager.instance.player.playerInventory.DropItem(itemToDrop);
                     inventory.Remove(UI_Manager.draggedSlot.slotID);
                 }
                 else
                 {
-                    GameManager.instance.player.DropItem(itemToDrop, inventory.slots[UI_Manager.draggedSlot.slotID].count);
+                    GameManager.instance.player.playerInventory.DropItem(itemToDrop, inventory.slots[UI_Manager.draggedSlot.slotID].count);
                     inventory.Remove(UI_Manager.draggedSlot.slotID, inventory.slots[UI_Manager.draggedSlot.slotID].count);
                 }
                 Refresh();
@@ -99,11 +95,11 @@ public class Inventory_UI : MonoBehaviour
     {
         if (UI_Manager.dragSingle)
         {
-            UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory);
+            UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, UI_Manager.draggedSlot.inventory, slot.inventory);
         }
         else
         {
-            UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, slot.inventory, UI_Manager.draggedSlot.inventory.slots[UI_Manager.draggedSlot.slotID].count);
+            UI_Manager.draggedSlot.inventory.MoveSlot(UI_Manager.draggedSlot.slotID, slot.slotID, UI_Manager.draggedSlot.inventory, slot.inventory, UI_Manager.draggedSlot.inventory.slots[UI_Manager.draggedSlot.slotID].count);
         }
         GameManager.instance.uiManager.RefreshAll();
     }

@@ -15,7 +15,7 @@ public class CraftingRecipe_UI : MonoBehaviour
         craftingManager = FindObjectOfType<CraftingManager>();
     }
 
-    public void Craft(CraftRecipe recipe) {
+    public void Craft(CraftingRecipe recipe) {
         this.craftingManager.CraftItem(recipe);
     }
 }

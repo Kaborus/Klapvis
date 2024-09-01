@@ -5,31 +5,31 @@ using UnityEngine.SceneManagement;
 
 public class MainMenu : MonoBehaviour
 {
-    public MenuManager menuManager;
+    public CharacterSelection characterSelection;
 
     void Start()
     {
-        menuManager = FindObjectOfType<MenuManager>();
+        characterSelection = FindObjectOfType<CharacterSelection>();
     }
 
     public void PickHuman()
     {
-        menuManager.character = Character.Human;
+        characterSelection.character = Character.Human;
     }
 
     public void PickGoblin()
     {
-        menuManager.character = Character.Goblin;
+        characterSelection.character = Character.Goblin;
     }
 
     public void PickDwarf()
     {
-        menuManager.character = Character.Dwarf;
+        characterSelection.character = Character.Dwarf;
     }
 
     public void PickGiant()
     {
-        menuManager.character = Character.Giant;
+        characterSelection.character = Character.Giant;
     }
 
     public void PlayPrehistory()
@@ -54,7 +54,6 @@ public class MainMenu : MonoBehaviour
 
     public void QuitGame()
     {
-        Debug.Log("Het spel is afgesloten.");
         Application.Quit();
     }
 

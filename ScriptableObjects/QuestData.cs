@@ -3,8 +3,7 @@ using UnityEngine;
 [CreateAssetMenu]
 public class QuestData : ScriptableObject
 {
-    public int Id;
-    public string Name;
+    public string questName;
     [TextArea]
-    public string Description;
+    public string description;
 }
