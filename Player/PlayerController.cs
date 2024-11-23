@@ -4,119 +4,101 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-    private Player player;
+    public Player player;
 
-    public EquippedItem equippedItem;
     public Toolbar_UI toolbar_UI;
     public List<Slot> hotbar;
 
-    public bool canUseEquippedItem = true;
+    private IEquippedItem equippedItem;
+
+    private bool canUseEquippedItem = true;
+
+    private bool inTundra = false;
+    private bool inDesert = false;
 
     private void Start()
     {
         player = GetComponent<Player>();
         toolbar_UI = FindObjectOfType<Toolbar_UI>();
-        hotbar = player.playerInventory.toolbar.slots;
+        toolbar_UI.OnSelectedSlotChange += UpdateEquippedItem;
+        hotbar = player.inventory.toolbar.slots;
+        SetEquippedItem(new NoItem());
     }
 
     private void Update()
     {
-        HandleInput();
-        UpdateEquippedItem();
-    }
+        UseItem();
 
-    private void HandleInput()
-    {
-        if (canUseEquippedItem)
-            switch (equippedItem)
+        if (inTundra)
+        {
+            if (player.stats.ColdProtection < 75)
             {
-                case EquippedItem.Melee:
-                    player.playerCombat.AttackWithMelee();
-                    break;
-                case EquippedItem.Bow:
-                    player.playerCombat.AttackWithBow();
-                    break;
-                case EquippedItem.Gun:
-                    player.playerCombat.AttackWithGun();
-                    break;
-                case EquippedItem.Pickaxe:
-                    UsePickaxe();
-                    break;
-                case EquippedItem.Axe:
-                    UseAxe();
-                    break;
-                case EquippedItem.Consumable:
-                    EatConsumable();
-                    break;
+                player.stats.LoseHealth(-1.0f);
             }
+        }
+        else if (inDesert)
+        {
+            if (player.stats.HeatProtection < 75)
+            {
+                player.stats.LoseHealth(-1.0f);
+            }
+        }
     }
 
-    private void UpdateEquippedItem()
+    private void SetEquippedItem(IEquippedItem equippedItem) => this.equippedItem = equippedItem;
+
+    private void UseItem() => equippedItem.Use(this);
+
+    public void UpdateEquippedItem()
     {
         switch (hotbar[(toolbar_UI.GetSelectedSlot().slotID)].itemCategory)
         {
             case ItemCategory.MeleeWeapon:
-                equippedItem = EquippedItem.Melee;
+                SetEquippedItem(new MeleeItem());
                 break;
             case ItemCategory.Bow:
-                equippedItem = EquippedItem.Bow;
-                break;
-            case ItemCategory.Gun:
-                equippedItem = EquippedItem.Gun;
+                SetEquippedItem(new BowItem());
                 break;
             case ItemCategory.Pickaxe:
-                equippedItem = EquippedItem.Pickaxe;
+                SetEquippedItem(new PickaxeItem());
                 break;
             case ItemCategory.Axe:
-                equippedItem = EquippedItem.Axe;
+                SetEquippedItem(new AxeItem());
                 break;
             case ItemCategory.Consumable:
-                equippedItem = EquippedItem.Consumable;
+                ConsumableItem ci = new ConsumableItem();
+                SetEquippedItem(ci);
+                ci.OnConsumated += UpdateEquippedItem;
                 break;
             default:
-                equippedItem = EquippedItem.None;
+                SetEquippedItem(new NoItem());
                 break;
         }
     }
 
-    public void EnableUseEquippedItem(bool enable)
-    {
-        canUseEquippedItem = enable;
-    }
+    public void EnableUseEquippedItem(bool enable) => canUseEquippedItem = enable;
 
-    private void UseTool(string tag)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        Vector2 mousePosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        RaycastHit2D hit = Physics2D.Raycast(mousePosition, Vector2.zero);
-
-        if (hit.collider != null)
+        if (other.gameObject.layer == LayerMask.NameToLayer("Tundra"))
         {
-            if (hit.collider.CompareTag(tag))
-            {
-                hit.collider.gameObject.GetComponent<ResourceNode>().DecreaseHealth();
-            }
+            inTundra = true;
+        }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Desert"))
+        {
+            inDesert = true;
         }
     }
 
-    private void UsePickaxe()
+    private void OnTriggerExit2D(Collider2D other)
     {
-        UseTool("Stone");
-    }
-
-    private void UseAxe()
-    {
-        UseTool("Tree");
-    }
-
-    private void EatConsumable()
-    {
-        if (Input.GetMouseButtonDown(0))
+        if (other.gameObject.layer == LayerMask.NameToLayer("Tundra"))
         {
-            Item item = GameManager.instance.itemManager.GetItemByName(hotbar[(toolbar_UI.GetSelectedSlot().slotID)].itemName);
-            ConsumableData consumableData = (ConsumableData)item.data;
-            player.playerStats.UpdateFood(consumableData.points);
-            player.playerInventory.RemoveItemFromToolbar();
-            GameManager.instance.uiManager.RefreshAll();
+            inTundra = false;
+        }
+        if (other.gameObject.layer == LayerMask.NameToLayer("Desert"))
+        {
+            inDesert = false;
         }
     }
 }

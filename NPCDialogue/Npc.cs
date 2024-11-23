@@ -4,26 +4,21 @@ using UnityEngine;
 
 public class Npc : MonoBehaviour
 {
+    public DialogueGroup[] dialogueGroups;
+    public int dialogueId;
+    public string npcName;
     public DialogueTrigger trigger;
     bool inRange;
-    public Quest quest;
-    public Npc nextQuestGiver;
 
-    void OnMouseDown()
+    private void OnMouseDown()
     {
-        Debug.Log(quest.questStatus);
         if (inRange)
         {
-            if (quest != null)
-            {
-                GameManager.instance.questManager.StartQuest(quest);
-            }
-
-            Debug.Log(quest.questStatus);
-
-            trigger.StartDialogue();
+            trigger.StartDialogue(dialogueId, npcName);
         }
     }
+
+    public void GetNextDialogue() => dialogueId *= 2;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {

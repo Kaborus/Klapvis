@@ -23,6 +23,22 @@ public class PlayerStats : MonoBehaviour
         set => protection = value;
     }
 
+    public float MaxColdProtection;
+    private float coldProtection;
+    public float ColdProtection
+    {
+        get => coldProtection;
+        set => coldProtection = value;
+    }
+
+    public float MaxHeatProtection;
+    private float heatProtection;
+    public float HeatProtection
+    {
+        get => heatProtection;
+        set => heatProtection = value;
+    }
+
     public float MaxHealth;
     private float health;
     public float Health
@@ -78,13 +94,19 @@ public class PlayerStats : MonoBehaviour
 
     public event Action OnCompletionChange;
     public event Action OnProtectionChange;
+    public event Action OnColdProtectionChange;
+    public event Action OnHeatProtectionChange;
     public event Action OnHealthChange;
     public event Action OnStaminaChange;
     public event Action OnStrengthChange;
     public event Action OnFoodChange;
 
+    public bool canRegenerate = true;
+
+    private float regenerateTimer = 0.0f;
+
     private float regenerationTime = 0;
-    private float starvingTime = 0;
+    private float healthLoseTime = 0;
     private float staminaIncreaseTimer = 0.0f;
     private float runTimer = 0.0f;
 
@@ -99,10 +121,10 @@ public class PlayerStats : MonoBehaviour
 
     private void SetUpStats()
     {
-        player.playerStats.Health = player.playerStats.MaxHealth;
-        player.playerStats.Stamina = player.playerStats.MaxStamina;
-        player.playerStats.Food = player.playerStats.MaxFood;
-        player.playerStats.RunSpeed = player.playerStats.WalkSpeed * 2f;
+        player.stats.Health = player.stats.MaxHealth;
+        player.stats.Stamina = player.stats.MaxStamina;
+        player.stats.Food = player.stats.MaxFood;
+        player.stats.RunSpeed = player.stats.WalkSpeed * 2f;
     }
 
     private void Update()
@@ -112,25 +134,36 @@ public class PlayerStats : MonoBehaviour
 
     private void HandleStats()
     {
-        if (player.playerStats.Food >= 0.1)
+        if (!canRegenerate)
         {
-            if ((player.playerStats.Health < player.playerStats.MaxHealth))
+            regenerateTimer += Time.deltaTime;
+
+            if (regenerateTimer >= 1.0f)
+            {
+                canRegenerate = true;
+                regenerateTimer = 0.0f;
+            }
+        }
+
+        if (player.stats.Food >= 0.1)
+        {
+            if ((player.stats.Health < player.stats.MaxHealth))
             {
                 RegenerateHealth();
             }
-            if (!isRunning && player.playerStats.Stamina < player.playerStats.MaxStamina)
+            if (!isRunning && player.stats.Stamina < player.stats.MaxStamina)
             {
                 RecoverStamina();
             }
         }
         else
         {
-            StarveToDeath();
+            LoseHealth(-0.1f);
         }
 
         DecreaseStamina();
 
-        if (player.playerStats.Health <= 0)
+        if (player.stats.Health <= 0)
         {
             Die();
         }
@@ -138,24 +171,36 @@ public class PlayerStats : MonoBehaviour
 
     private void UpdateCompletion(float amount)
     {
-        player.playerStats.Completion += amount;
+        player.stats.Completion += amount;
         OnCompletionChange?.Invoke();
     }
 
     public void UpdateProtection(float amount)
     {
-        player.playerStats.Protection += amount;
+        player.stats.Protection += amount;
         OnProtectionChange?.Invoke();
+    }
+
+    public void UpdateColdProtection(float amount)
+    {
+        player.stats.ColdProtection += amount;
+        OnColdProtectionChange?.Invoke();
+    }
+
+    public void UpdateHeatProtection(float amount)
+    {
+        player.stats.HeatProtection += amount;
+        OnHeatProtectionChange?.Invoke();
     }
 
     public void UpdateHealth(float amount)
     {
-        player.playerStats.Health += amount;
-        player.playerStats.Health = Mathf.Round(player.playerStats.Health * 10f) / 10f;
+        player.stats.Health += amount;
+        player.stats.Health = Mathf.Round(player.stats.Health * 10f) / 10f;
 
-        if (player.playerStats.Health > player.playerStats.MaxHealth)
+        if (player.stats.Health > player.stats.MaxHealth)
         {
-            player.playerStats.Health = player.playerStats.MaxHealth;
+            player.stats.Health = player.stats.MaxHealth;
         }
 
         OnHealthChange?.Invoke();
@@ -163,24 +208,24 @@ public class PlayerStats : MonoBehaviour
 
     public void UpdateStamina(float amount)
     {
-        player.playerStats.Stamina += amount;
+        player.stats.Stamina += amount;
         OnStaminaChange?.Invoke();
     }
 
     public void UpdateStrength(float amount)
     {
-        player.playerStats.Strength += amount;
+        player.stats.Strength += amount;
         OnStrengthChange?.Invoke();
     }
 
     public void UpdateFood(float amount)
     {
-        player.playerStats.Food += amount;
-        player.playerStats.Food = Mathf.Round(player.playerStats.Food * 10f) / 10f;
+        player.stats.Food += amount;
+        player.stats.Food = Mathf.Round(player.stats.Food * 10f) / 10f;
 
-        if (player.playerStats.Food > player.playerStats.MaxFood)
+        if (player.stats.Food > player.stats.MaxFood)
         {
-            player.playerStats.Food = player.playerStats.MaxFood;
+            player.stats.Food = player.stats.MaxFood;
         }
 
         OnFoodChange?.Invoke();
@@ -188,24 +233,28 @@ public class PlayerStats : MonoBehaviour
 
     private void RegenerateHealth()
     {
+        if (!canRegenerate) return;
+
         regenerationTime += Time.deltaTime;
 
         if (regenerationTime >= 0.2f)
         {
-            UpdateHealth(0.2f);
+            UpdateHealth(1.0f);
             UpdateFood(-0.2f);
             regenerationTime = 0;
         }
     }
 
-    private void StarveToDeath()
+    public void LoseHealth(float amount)
     {
-        starvingTime += Time.deltaTime;
+        canRegenerate = false;
+        regenerateTimer = 0.0f;
+        healthLoseTime += Time.deltaTime;
 
-        if (starvingTime >= 0.5f)
+        if (healthLoseTime >= 0.5f)
         {
-            UpdateHealth(-0.1f);
-            starvingTime = 0;
+            UpdateHealth(amount);
+            healthLoseTime = 0;
         }
     }
 

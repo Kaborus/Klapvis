@@ -55,12 +55,12 @@ public class HUD : MonoBehaviour
 
     private void SubscribeEvents()
     {
-        player.playerStats.OnCompletionChange += UpdateCompletion;
-        player.playerStats.OnProtectionChange += UpdateProtection;
-        player.playerStats.OnHealthChange += UpdateHealth;
-        player.playerStats.OnStaminaChange += UpdateStamina;
-        player.playerStats.OnStrengthChange += UpdateStrength;
-        player.playerStats.OnFoodChange += UpdateFood;
+        player.stats.OnCompletionChange += UpdateCompletion;
+        player.stats.OnProtectionChange += UpdateProtection;
+        player.stats.OnHealthChange += UpdateHealth;
+        player.stats.OnStaminaChange += UpdateStamina;
+        player.stats.OnStrengthChange += UpdateStrength;
+        player.stats.OnFoodChange += UpdateFood;
     }
 
     private void SetUpStats()
@@ -87,27 +87,27 @@ public class HUD : MonoBehaviour
 
     public void UpdateProtection()
     {
-        UpdateSlider(protectionSlider, protectionText, player.playerStats.Protection);
+        UpdateSlider(protectionSlider, protectionText, player.stats.Protection);
     }
 
     public void UpdateHealth()
     {
-        UpdateSlider(healthSlider, healthText, player.playerStats.Health);
+        UpdateSlider(healthSlider, healthText, player.stats.Health);
     }
 
     private void UpdateStamina()
     {
-        UpdateSlider(staminaSlider, staminaText, player.playerStats.Stamina);
+        UpdateSlider(staminaSlider, staminaText, player.stats.Stamina);
     }
 
     private void UpdateStrength()
     {
-        UpdateSlider(strengthSlider, strengthText, player.playerStats.Strength);
+        UpdateSlider(strengthSlider, strengthText, player.stats.Strength);
     }
 
     private void UpdateFood()
     {
-        UpdateSlider(foodSlider, foodText, player.playerStats.Food);
+        UpdateSlider(foodSlider, foodText, player.stats.Food);
     }
 
     public void DecreaseHealth(Mob mob)

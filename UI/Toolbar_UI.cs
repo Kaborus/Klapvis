@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -6,6 +7,7 @@ public class Toolbar_UI : MonoBehaviour
 {
     [SerializeField] private List<Slot_UI> toolbarSlots = new List<Slot_UI>();
     private Slot_UI selectedSlot;
+    public event Action OnSelectedSlotChange;
 
     private void Start()
     {
@@ -29,6 +31,7 @@ public class Toolbar_UI : MonoBehaviour
             }
             selectedSlot = toolbarSlots[index];
             selectedSlot.SetHighlight(true);
+            OnSelectedSlotChange?.Invoke();
         }
     }
 

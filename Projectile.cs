@@ -49,7 +49,7 @@ public class Projectile : MonoBehaviour
 
     private float ProjectileDamage()
     {
-        float dmg = (damage - (GameManager.instance.player.playerStats.Protection * 0.5f));
+        float dmg = (damage - (GameManager.instance.player.stats.Protection * 0.5f));
 
         return dmg < 1 ? 1 : dmg;
     }

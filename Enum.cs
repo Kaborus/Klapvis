@@ -1,19 +1,9 @@
-public enum Character
-{
-    None,
-    Human,
-    Goblin,
-    Dwarf,
-    Giant
-}
-
 public enum ItemCategory
 {
     None,
     Material,
     MeleeWeapon,
     Bow,
-    Gun,
     Pickaxe,
     Axe,
     HeadGear,
@@ -22,19 +12,7 @@ public enum ItemCategory
     LegGear,
     FootGear,
     Consumable,
-    Arrow,
-    Bullet
-}
-
-public enum EquippedItem
-{
-    None,
-    Melee,
-    Bow,
-    Gun,
-    Pickaxe,
-    Axe,
-    Consumable
+    Arrow
 }
 
 public enum SlotType
@@ -55,24 +33,9 @@ public enum MobBehaviour
     Aggressive
 }
 
-public enum MobState
-{
-    Wander,
-    Attack,
-    Chase,
-    Retreat
-}
-
 public enum MobAttack
 {
     None,
     Melee,
     Range
-}
-
-public enum QuestStatus
-{
-    Inactive,
-    Active,
-    Completed
 }

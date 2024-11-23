@@ -19,17 +19,7 @@ public class Slot
         max = 100;
     }
 
-    public bool IsEmpty
-    {
-        get
-        {
-            if (itemName == "" && count == 0)
-            {
-                return true;
-            }
-            return false;
-        }
-    }
+    public bool IsEmpty => itemName == "" && count == 0;
 
     public bool canAddItem(string itemName)
     {

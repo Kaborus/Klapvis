@@ -32,7 +32,7 @@ public class CraftingManager : MonoBehaviour
     {
         foreach (Item i in recipe.ingredients)
         {
-            hasAllItems = player.playerInventory.backpack.slots.Any(item => item.itemName == i.name);
+            hasAllItems = player.inventory.backpack.slots.Any(item => item.itemName == i.name);
 
             if (!hasAllItems)
             {
@@ -46,7 +46,7 @@ public class CraftingManager : MonoBehaviour
     {
         foreach (Item i in recipe.ingredients)
         {
-            Slot slot = player.playerInventory.backpack.slots.FirstOrDefault(slot => slot.itemName == i.data.name);
+            Slot slot = player.inventory.backpack.slots.FirstOrDefault(slot => slot.itemName == i.data.name);
             slot.RemoveItem();
         }
     }
@@ -55,7 +55,7 @@ public class CraftingManager : MonoBehaviour
     {
         for (int i = 0; i < recipe.amount; i++)
         {
-            player.playerInventory.Add("Backpack", item);
+            player.inventory.Add("Backpack", item);
         }
     }
 }

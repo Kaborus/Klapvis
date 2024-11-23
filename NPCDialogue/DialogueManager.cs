@@ -1,70 +1,46 @@
+using System.IO;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class DialogueManager : MonoBehaviour
 {
-    public Image actorImage;
-    public Text actorName;
-    public Text messageText;
-    public RectTransform backgroundBox;
-    Message[] currentMessages;
-    Actor[] currentActors;
-    int activeMessage = 0;
-    public static bool isActive = false;
-    public bool aanHetPraten;
+    public DialogueGroup[] dialogueGroups;
 
-    public void OpenDialogue(Message[] messages, Actor[] actors)
+    private void Start()
     {
-        currentMessages = messages;
-        currentActors = actors;
-        activeMessage = 0;
-        isActive = true;
-        DisplayMessage();
+        LoadDialogueData();
     }
 
-    void DisplayMessage()
+    public void LoadDialogueData()
     {
-        Message messageToDisplay = currentMessages[activeMessage];
-        messageText.text = messageToDisplay.message;
+        string filePath = Path.Combine(Application.streamingAssetsPath, "dialogues.json");
 
-        Actor actorToDisplay = currentActors[messageToDisplay.actorId];
-        actorName.text = actorToDisplay.name;
-        actorImage.sprite = actorToDisplay.sprite;
-    }
-
-    public void NextMessage()
-    {
-        activeMessage++;
-        if (activeMessage < currentMessages.Length)
+        if (File.Exists(filePath))
         {
-            DisplayMessage();
+            string json = File.ReadAllText(filePath);
+            DialogueGroupList dialogueGroupList = JsonUtility.FromJson<DialogueGroupList>(json);
+            dialogueGroups = dialogueGroupList.dialogueGroups;
         }
         else
         {
-            backgroundBox.transform.localScale = Vector3.zero;
-            isActive = false;
-        }
-    }
-    public void AanEnUit()
-    {
-        if (isActive)
-        {
-            backgroundBox.transform.localScale = new Vector3(0.4677083f, 0.4677083f, 0.4677083f);
-        }
-        else
-        {
-            backgroundBox.transform.localScale = Vector3.zero;
+            Debug.LogError("Dialogue file not found");
         }
     }
 
-    void Update()
+    public DialogueGroup GetDialogueGroupById(int id)
     {
-        if (Input.GetKeyDown(KeyCode.Space) && isActive)
+        return System.Array.Find(dialogueGroups, group => group.id == id);
+    }
+
+    public void SetDialogue(int id)
+    {
+        switch (id)
         {
-            NextMessage();
+            case 2:
+                GameManager.instance.guide.GetNextDialogue();
+                GameManager.instance.farmer.GetNextDialogue();
+                break;
         }
-        AanEnUit();
     }
 }

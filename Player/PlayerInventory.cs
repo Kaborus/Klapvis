@@ -79,16 +79,16 @@ public class PlayerInventory : MonoBehaviour
 
     public void RemoveItemFromToolbar()
     {
-        toolbar.slots[(player.playerController.toolbar_UI.GetSelectedSlot().slotID)].RemoveItem();
+        toolbar.slots[(player.controller.toolbar_UI.GetSelectedSlot().slotID)].RemoveItem();
     }
 
     public void RemoveProjectile(string itemName)
     {
-        Slot slot = player.playerInventory.backpack.slots.FirstOrDefault(slot => slot.itemName == itemName);
+        Slot slot = player.inventory.backpack.slots.FirstOrDefault(slot => slot.itemName == itemName);
 
         if (slot == null)
         {
-            slot = player.playerInventory.toolbar.slots.FirstOrDefault(slot => slot.itemName == itemName);
+            slot = player.inventory.toolbar.slots.FirstOrDefault(slot => slot.itemName == itemName);
         }
 
         if (slot != null)
@@ -100,15 +100,24 @@ public class PlayerInventory : MonoBehaviour
 
     public bool HasItemByItemCategory(ItemCategory itemCategory)
     {
-        if (player.playerInventory.backpack.slots.Any(item => item.itemCategory == itemCategory))
+        if (player.inventory.backpack.slots.Any(item => item.itemCategory == itemCategory))
         {
             return true;
         }
-        else if (player.playerInventory.toolbar.slots.Any(item => item.itemCategory == itemCategory))
+        else if (player.inventory.toolbar.slots.Any(item => item.itemCategory == itemCategory))
         {
             return true;
         }
 
         return false;
+    }
+
+    public Item GetFirstItemByCategory(ItemCategory itemCategory)
+    {
+        Slot slot = backpack.slots.FirstOrDefault(i => i.itemCategory == ItemCategory.Arrow);
+
+        Item item = GameManager.instance.itemManager.GetItemByName(slot.itemName);
+
+        return item;
     }
 }

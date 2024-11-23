@@ -6,4 +6,6 @@ using UnityEngine;
 public class GearData : ItemData
 {
     public int protection;
+    public int coldProtection;
+    public int heatProtection;
 }

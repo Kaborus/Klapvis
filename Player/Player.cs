@@ -5,20 +5,25 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    internal PlayerStats playerStats;
-    internal PlayerInventory playerInventory;
-    internal PlayerController playerController;
-    internal PlayerMovement playerMovement;
-    internal PlayerCombat playerCombat;
-    internal PlayerAnimation playerAnimation;
+    internal PlayerStats stats;
+    internal PlayerInventory inventory;
+    internal PlayerController controller;
+    internal PlayerMovement movement;
+    internal PlayerCombat combat;
+    internal PlayerAnimation anim;
 
     private void Awake()
     {
-        playerStats = GetComponent<PlayerStats>();
-        playerInventory = GetComponent<PlayerInventory>();
-        playerController = GetComponent<PlayerController>();
-        playerMovement = GetComponent<PlayerMovement>();
-        playerCombat = GetComponent<PlayerCombat>();
-        playerAnimation = GetComponent<PlayerAnimation>();
+        SetUpComponents();
+    }
+
+    private void SetUpComponents()
+    {
+        stats = GetComponent<PlayerStats>();
+        inventory = GetComponent<PlayerInventory>();
+        controller = GetComponent<PlayerController>();
+        movement = GetComponent<PlayerMovement>();
+        combat = GetComponent<PlayerCombat>();
+        anim = GetComponent<PlayerAnimation>();
     }
 }

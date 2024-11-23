@@ -5,20 +5,18 @@ using UnityEngine;
 [RequireComponent(typeof(Item))]
 public class Collectable : MonoBehaviour
 {
-    public PlayerMovement playerMovement;
     public Inventory_UI ui;
     public float pickupRange = 1f;
     public bool canPickup = false;
 
     private void Awake()
     {
-        playerMovement = FindObjectOfType<PlayerMovement>();
         ui = FindObjectOfType<Inventory_UI>();
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (playerMovement.canMove)
+        if (GameManager.instance.player.movement.canMove)
         {
             Player player = collision.GetComponent<Player>();
 
@@ -45,9 +43,17 @@ public class Collectable : MonoBehaviour
 
     private void Update()
     {
-        //movement = FindObjectOfType<Movement>();
+        PickUpItem();
+    }
+
+    private void PickUpItem()
+    {
         if (canPickup && Input.GetKey(KeyCode.Space))
         {
+
+            if (GameManager.instance.player.inventory.backpack.InventoryIsFull()) return;
+
+
             Player player = FindObjectOfType<Player>();
 
             if (player)
@@ -56,7 +62,7 @@ public class Collectable : MonoBehaviour
 
                 if (item != null)
                 {
-                    player.playerInventory.Add("Backpack", item);
+                    player.inventory.Add("Backpack", item);
                     Destroy(this.gameObject);
                 }
             }

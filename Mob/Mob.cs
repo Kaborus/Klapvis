@@ -4,21 +4,21 @@ using UnityEngine;
 
 public class Mob : MonoBehaviour
 {
-    internal MobStats mobStats;
-    internal MobController mobController;
-    internal MobAnimation mobAnimation;
-    internal MobCombat mobCombat;
+    internal MobStats stats;
+    internal MobController controller;
+    internal MobAnimation anim;
+    internal MobCombat combat;
 
     private void Awake()
     {
-        SetUpComponent();
+        SetUpComponents();
     }
 
-    private void SetUpComponent()
+    private void SetUpComponents()
     {
-        mobStats = GetComponent<MobStats>();
-        mobController = GetComponent<MobController>();
-        mobAnimation = GetComponent<MobAnimation>();
-        mobCombat = GetComponent<MobCombat>();
+        stats = GetComponent<MobStats>();
+        controller = GetComponent<MobController>();
+        anim = GetComponent<MobAnimation>();
+        combat = GetComponent<MobCombat>();
     }
 }

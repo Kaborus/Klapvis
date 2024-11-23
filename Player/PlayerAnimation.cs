@@ -16,7 +16,7 @@ public class PlayerAnimation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        AnimateMovement(player.playerMovement.direction);
+        AnimateMovement(player.movement.direction);
     }
 
     public void AnimateMovement(Vector3 direction)

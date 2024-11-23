@@ -28,22 +28,23 @@ public class PlayerMovement : MonoBehaviour
 
     private void HandleInput()
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
-
-        direction = new Vector3(horizontal, vertical).normalized;
-
         if (canMove)
         {
-            if (Input.GetKey(KeyCode.LeftShift) && direction != Vector3.zero && player.playerStats.Stamina > 0)
+            float horizontal = Input.GetAxisRaw("Horizontal");
+            float vertical = Input.GetAxisRaw("Vertical");
+
+            direction = new Vector3(horizontal, vertical).normalized;
+
+
+            if (Input.GetKey(KeyCode.LeftShift) && direction != Vector3.zero && player.stats.Stamina > 0)
             {
-                player.playerStats.Speed = player.playerStats.RunSpeed;
-                player.playerStats.isRunning = true;
+                player.stats.Speed = player.stats.RunSpeed;
+                player.stats.isRunning = true;
             }
             else
             {
-                player.playerStats.Speed = player.playerStats.WalkSpeed;
-                player.playerStats.isRunning = false;
+                player.stats.Speed = player.stats.WalkSpeed;
+                player.stats.isRunning = false;
             }
         }
     }
@@ -52,7 +53,7 @@ public class PlayerMovement : MonoBehaviour
     {
         if (canMove && direction != Vector3.zero)
         {
-            transform.position += direction * player.playerStats.Speed * Time.deltaTime;
+            transform.position += direction * player.stats.Speed * Time.deltaTime;
         }
     }
 

@@ -53,31 +53,31 @@ public class MobStats : MonoBehaviour
 
     private void SetUpStats()
     {
-        mob.mobStats.Health = mob.mobStats.MaxHealth;
-        mob.mobStats.Speed = mob.mobStats.WalkSpeed;
-        mob.mobStats.RunSpeed = mob.mobStats.WalkSpeed * 2;
+        mob.stats.Health = mob.stats.MaxHealth;
+        mob.stats.Speed = mob.stats.WalkSpeed;
+        mob.stats.RunSpeed = mob.stats.WalkSpeed * 2;
     }
 
     private void Update()
     {
-        if (mob.mobStats.Health <= 0)
+        if (mob.stats.Health <= 0)
         {
-            mob.mobController.Die();
+            mob.controller.Die();
         }
     }
 
     public void UpdateHealth(float amount)
     {
-        mob.mobStats.Health += amount;
+        mob.stats.Health += amount;
     }
 
     public void SetSpeedToWalkSpeed()
     {
-        mob.mobStats.Speed = mob.mobStats.WalkSpeed;
+        mob.stats.Speed = mob.stats.WalkSpeed;
     }
 
     public void SetSpeedToRunSpeed()
     {
-        mob.mobStats.Speed = mob.mobStats.RunSpeed;
+        mob.stats.Speed = mob.stats.RunSpeed;
     }
 }

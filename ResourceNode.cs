@@ -5,32 +5,9 @@ using UnityEngine;
 public class ResourceNode : MonoBehaviour
 {
     public Transform items;
-    public float health;
-    public GameObject drop;
-    public Vector3 offset;
+    public Item item;
 
-    void Start()
-    {
-        items = transform.Find("Items");
-    }
+    private void Start() => items = transform.Find("Items");
 
-    public void DecreaseHealth()
-    {
-        health -= Time.deltaTime;
-    }
-
-    public void BreakNode()
-    {
-        Destroy(this.gameObject);
-
-        Instantiate(drop, transform.position - offset, transform.rotation, items);
-    }
-
-    void Update()
-    {
-        if (health <= 0)
-        {
-            BreakNode();
-        }
-    }
+    public void GiveResource() => GameManager.instance.player.inventory.Add("Backpack", item);
 }

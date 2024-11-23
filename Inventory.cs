@@ -75,6 +75,8 @@ public class Inventory
         }
     }
 
+    public bool InventoryIsFull() => !slots.Any(s => s.itemName == "");
+
     public void MoveSlot(int fromIndex, int toIndex, Inventory fromInventory, Inventory toInventory, int numToMove = 1)
     {
         Slot fromSlot = slots[fromIndex];
@@ -86,40 +88,53 @@ public class Inventory
 
         Slot toSlot = toInventory.slots[toIndex];
 
-        if (!CheckIfItemSlotHasMaxItems(fromSlot, toSlot))
-        {
-            return;
-        }
+        if (!CheckIfItemSlotHasMaxItems(fromSlot, toSlot)) return;
 
-        if (!FromLoadoutConditions(fromSlot, toSlot, fromInventory, toInventory))
-        {
-            return;
-        }
+        if (!FromLoadoutConditions(fromSlot, toSlot, fromInventory, toInventory)) return;
 
-        if (!CanEquipItemInInventory(fromSlot, toSlot))
-        {
-            return;
-        }
+        if (!CanEquipItemInInventory(fromSlot, toSlot)) return;
 
-        LoadoutChange(fromSlot, fromInventory, toInventory);
+        LoadoutChange(fromSlot, toSlot, fromInventory, toInventory);
 
         MoveItems(fromSlot, toSlot, numToMove);
     }
 
-    private void LoadoutChange(Slot fromSlot, Inventory fromInventory, Inventory toInventory)
+    private void LoadoutChange(Slot fromSlot, Slot toSlot, Inventory fromInventory, Inventory toInventory)
     {
         if (fromInventory.Name == "Loadout")
         {
             Item item = GameManager.instance.itemManager.GetItemByName(fromSlot.itemName);
             GearData gearData = (GearData)item.data;
-            GameManager.instance.player.playerStats.UpdateProtection(-(gearData.protection));
+            GameManager.instance.player.stats.UpdateProtection(-(gearData.protection));
+            GameManager.instance.player.stats.UpdateColdProtection(-(gearData.coldProtection));
+            GameManager.instance.player.stats.UpdateHeatProtection(-(gearData.heatProtection));
+
+            if (toSlot.itemName != "")
+            {
+                Item item2 = GameManager.instance.itemManager.GetItemByName(toSlot.itemName);
+                GearData gearData2 = (GearData)item2.data;
+                GameManager.instance.player.stats.UpdateProtection((gearData2.protection));
+                GameManager.instance.player.stats.UpdateColdProtection((gearData2.coldProtection));
+                GameManager.instance.player.stats.UpdateHeatProtection((gearData2.heatProtection));
+            }
         }
 
         if (toInventory.Name == "Loadout")
         {
             Item item = GameManager.instance.itemManager.GetItemByName(fromSlot.itemName);
             GearData gearData = (GearData)item.data;
-            GameManager.instance.player.playerStats.UpdateProtection(gearData.protection);
+            GameManager.instance.player.stats.UpdateProtection(gearData.protection);
+            GameManager.instance.player.stats.UpdateColdProtection((gearData.coldProtection));
+            GameManager.instance.player.stats.UpdateHeatProtection((gearData.heatProtection));
+
+            if (toSlot.itemName != "")
+            {
+                Item item2 = GameManager.instance.itemManager.GetItemByName(toSlot.itemName);
+                GearData gearData2 = (GearData)item2.data;
+                GameManager.instance.player.stats.UpdateProtection(-(gearData2.protection));
+                GameManager.instance.player.stats.UpdateColdProtection(-(gearData2.coldProtection));
+                GameManager.instance.player.stats.UpdateHeatProtection(-(gearData2.heatProtection));
+            }
         }
     }
 

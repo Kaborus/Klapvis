@@ -13,12 +13,12 @@ public class MeleeAttack : AttackType
 
     public override void Attack(Transform target)
     {
-        GameManager.instance.player.playerStats.UpdateHealth(-(GetDamage()));
+        GameManager.instance.player.stats.UpdateHealth(-(GetDamage()));
     }
 
     private float GetDamage()
     {
-        float dmg = (mob.mobStats.Damage - (GameManager.instance.player.playerStats.Protection * 0.5f));
+        float dmg = (mob.stats.Damage - (GameManager.instance.player.stats.Protection * 0.5f));
 
         return dmg < 1 ? 1 : dmg;
     }

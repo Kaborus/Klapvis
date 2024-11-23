@@ -19,7 +19,7 @@ public class MobCombat : MonoBehaviour
     {
         if (attackTimer == 0)
         {
-            mob.mobAnimation.SetAttack(true);
+            mob.anim.SetAttack(true);
         }
 
         CheckAnimationStateForAttack();
@@ -34,13 +34,13 @@ public class MobCombat : MonoBehaviour
 
     private void CheckAnimationStateForAttack()
     {
-        AnimatorStateInfo stateInfo = mob.mobAnimation.GetCurrentStateInfo();
+        AnimatorStateInfo stateInfo = mob.anim.GetCurrentStateInfo();
 
         if (stateInfo.IsName("Attack"))
         {
             if (stateInfo.normalizedTime % 1 >= 0.4990f && stateInfo.normalizedTime % 1 < 0.5020f)
             {
-                Attack(mob.mobController.target);
+                Attack(mob.controller.target);
             }
         }
     }
@@ -52,6 +52,6 @@ public class MobCombat : MonoBehaviour
 
     public void ResetAttackTimer()
     {
-        this.attackTimer = 0;
+        attackTimer = 0;
     }
 }

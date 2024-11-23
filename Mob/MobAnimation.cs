@@ -15,14 +15,14 @@ public class MobAnimation : MonoBehaviour
 
     private void FixedUpdate()
     {
-        AnimateMovement(mob.mobController.direction);
+        AnimateMovement(mob.controller.direction);
     }
 
     private void AnimateMovement(Vector3 direction)
     {
         if (animator != null)
         {
-            if (mob.mobController.direction.magnitude > 0)
+            if (mob.controller.direction.magnitude > 0)
             {
                 animator.SetBool("isMoving", true);
                 animator.SetFloat("horizontal", direction.x);
@@ -39,6 +39,6 @@ public class MobAnimation : MonoBehaviour
 
     public void SetAttack(bool attackState)
     {
-        mob.mobAnimation.animator.SetBool("isAttacking", attackState);
+        mob.anim.animator.SetBool("isAttacking", attackState);
     }
 }

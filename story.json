@@ -1,0 +1,66 @@
+{
+    "prehistory": [
+        {
+            "eurasia": {
+                "grassland": [
+                    "Speler moet hout en steen verzamelen en iets van voedsel",
+                    "Speler moet jagen",
+                    "Speler moet de jonge dorpelingen gaan zoeken en komt uiteindelijk in een grot een onbekend ei tegen",
+                    "Speler brengt ei naar stamhoofd en die vertelt dat de speler op reis naar ... moet als hij wil weten van welk schepsel dit ei is"
+                ],
+                "forest": [
+                    "Speler gaat op pad en komt een koboldenstam tegen, speler vraagt weg, maar moet daarvoor iets voor ze doen, als speler terug komt, wordt hij bestolen van het ei",
+                    "Speler breekt in bij koboldenstam en zoekt en vindt het ei",
+                    "Speler vecht tegen zoogdier eindbaas"
+                ],
+                "Wetland": [
+                    "Speler wordt geleerd hoe te vissen",
+                    "Speler vecht tegen amfibie eindbaas"
+                ],
+                "Swamp": [
+                    "Speler komt moeras-stam tegen",
+                    "Speler wordt gevangen genomen door stam",
+                    "stam wordt overvallen door moeras-dieren",
+                    "Speler vecht tegen reptiel eindbaas"
+                ],
+                "Cave": [
+                    "Speler komt aan bij een grot, waar dwergen in wonen",
+                    "Speler helpt mee met minen",
+                    "MOGELIJKHEID OM BRONS EN IJZER TE VINDEN, WAT LEIDT TOT EXTRA VERHAALLIJN",
+                    "Speler doorloopt de grot, die uiteindelijk naar een uitgang leidt. De grot zit vol met insecten",
+                    "Speler vecht tegen insect eindbaas"
+                ],
+                "Mountain": [
+                    "Speler komt aan bij het uiteinde van de grot en moet voor het vervolg van de reis een berg beklimmen",
+                    "Speler komt op een gegeven moment reuzen tegen die in dit berggebied wonen.",
+                    "Speler wordt bestolen van ei door reuzen, die dit ei als eten beschouwen",
+                    "Ei ligt boven op kampvuur, maar het ei wordt vervolgens gestolen door vogel",
+                    "Speler krijgt taak van reuzen om tot aan de top van de berg beklimmen en het ei terug te stelen.",
+                    "Speler komt beklimt berg",
+                    "Speler vecht tegen vogel eindbaas",
+                    "Speler wordt naar beneden geholpen door vogel",
+                    "Speler krijgt te horen de zee over te moeten om aan te komen bij bestemming",
+                    "Speler gaat met een vlot op pad"
+                ]
+            },
+            "africa": {
+                "desert": [
+                    "Speler komt aan bij woestijn",
+                    "Speler verzamelt cactussen om zo genoeg water binnen te krijgen",
+                    "Speler komt aan bij de rivier waaraan ook de stad grenst waar hij naar toe moet. Hier kan de speler drinken van de rivier",
+                    "Speler ontmoet mensen die vruchten plukken bij bomen aan de rivier die in de stad wonen, en na het meehelpen plukken wordt hij naar de stad geleidt"
+                ],
+                "egypt": [
+                    "Speler komt aan in de stad en mag tijdelijk even intrekken bij de mensen met wie hij mee is gereisd",
+                    "Speler vraagt bij de stadsmarkt rond hoe hij het paleis binnen kan komen",
+                    "Speler bezoekt de bouw van de piramdes en verzamelt bouwstenen om zo een bijdrage aan de bouw te leveren",
+                    "Speler probeert het koninklijke paleis te betreden via een doorgang op het dak, omdat hij door de gewone doorgang niet wordt doorgelaten",
+                    "Speler wordt betrapt en moet zich verantwoorden voor de Farao. Speler vertelt waarom hij hier is en laat het ei zien. Hierna wordt het ei gebracht naar het onderzoeksgebouw",
+                    "Speler gaat naar het gebouw voor de resultaten en er is bekend geworden dat het om een drakenei gaat.",
+                    "Speler krijgt de keuze drakenei te slopen of te behouden en uit te laten komen.",
+                    "MOGELIJKE DRAKEN EINDBAAS OP BASIS VAN KEUZE"
+                ]
+            }
+        }
+    ]
+}

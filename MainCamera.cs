@@ -11,7 +11,7 @@ public class MainCamera : MonoBehaviour
         player = FindObjectOfType<Player>().gameObject;
     }
 
-    void Update()
+    private void Update()
     {
         if (player != null)
         {
